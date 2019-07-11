@@ -15,28 +15,28 @@ class Insta_Info_Scraper:
         data = soup.find_all('meta', attrs={'property': 'og:description'
                              })
         text = data[0].get('content').split()
-        user = '%s %s %s' % (text[-3], text[-2], text[-1])
+        print(text)
+        self.user = ""
+        for i in text:
+            if i == "from":
+                for k in range(1,len(text) - text.index(i)):
+                    self.user =self.user + " "+ text[text.index(i)+k]
         followers = text[0]
         following = text[2]
-        posts = text[4]
-        print ('User:', user)
+        self.posts = text[4]
+        print ('User:', self.user)
         print ('Followers:', followers)
         print ('Following:', following)
-        print ('Posts:', posts)
+        #print ('Posts:', posts)
         print ('---------------------------')
 
     def main(self):
         self.ctx = ssl.create_default_context()
         self.ctx.check_hostname = False
         self.ctx.verify_mode = ssl.CERT_NONE
-        users=['https://www.instagram.com/__anandsure/']
-
-        with open('users.txt') as f:
-            self.content = f.readlines()
-        self.content = [x.strip() for x in self.content]
-        for url in self.content:
-            self.getinfo(url)
-
+        url1 ='https://www.instagram.com/vit_bot/'
+        self.getinfo(url1)
+        return self.posts
 
 if __name__ == '__main__':
     obj = Insta_Info_Scraper()
