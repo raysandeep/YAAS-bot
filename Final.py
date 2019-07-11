@@ -115,8 +115,9 @@ if __name__ == '__main__':
     InstagramAPI = InstagramAPI("vit_bot", "yaas123")
     InstagramAPI.login()    
     bot =	{
-            "VIT Bot (@vit_bot)" : 1 ,
-            "Anand (@__anandsure)" : 60
+            " VIT Bot (@vit_bot)" : 1 ,
+            " Anand (@__anandsure)" : 62 ,
+            " Sandeep (@cant_find_new_name)" : 7
             }
     while(True):
         for x in bot:
@@ -128,7 +129,7 @@ if __name__ == '__main__':
                 u = 'https://www.instagram.com/' + namee  +'/?hl=en'
                 results = k.profile_page_recent_posts(u)
                 for i in range(int(po)-bot[us]):
-                    url = results[i-1]['display_url']
+                    url = results[-i]['display_url']
                     cap = "Repost from : " + us + results[i-1]['edge_media_to_caption']['edges'][0]['node']['text']
                     urllib.request.urlretrieve(url,"test.jpg")
                   # login
@@ -139,3 +140,6 @@ if __name__ == '__main__':
                     bot[us]+=1
                     print(bot[us])
                     break
+            elif int(po)< bot[us] :
+                print(bot[us])
+                bot[us] = int(po)
