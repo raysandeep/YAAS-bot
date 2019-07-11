@@ -21,8 +21,13 @@ class Insta_Info_Scraper:
         soup = BeautifulSoup(html, 'html.parser')
         data = soup.find_all('meta', attrs={'property': 'og:description'
                              })
+        
         text = data[0].get('content').split()
-        self.user = '%s %s %s' % (text[-3], text[-2], text[-1])
+        self.user = ""
+        for i in text:
+            if i == "from":
+                for k in range(1,len(text) - text.index(i)):
+                    self.user =self.user + " "+ text[text.index(i)+k]
         followers = text[0]
         following = text[2]
         self.posts = text[4]
@@ -31,17 +36,13 @@ class Insta_Info_Scraper:
         print ('Following:', following)
         print ('Posts:', posts)
         print ('---------------------------')'''
-    def main(self):
+    def main(self,username):
         self.ctx = ssl.create_default_context()
         self.ctx.check_hostname = False
         self.ctx.verify_mode = ssl.CERT_NONE
-
-        with open('users.txt') as f:
-            self.content = f.readlines()
-        self.content = [x.strip() for x in self.content]
-        for url in self.content:
-            self.getinfo(url)
-            return self.user,self.posts
+        url1 = "https://www.instagram.com/"+ username.split("@")[1].split(")")[0] + "/"
+        self.getinfo(url1)
+        return self.user,self.posts
 
 
 
@@ -114,27 +115,27 @@ if __name__ == '__main__':
     InstagramAPI = InstagramAPI("vit_bot", "yaas123")
     InstagramAPI.login()    
     bot =	{
-            "VIT Bot (@vit_bot)" : 1
+            "VIT Bot (@vit_bot)" : 1 ,
+            "Anand (@__anandsure)" : 60
             }
     while(True):
-        
-        us,po = Insta_Info_Scraper().main()
-        print(us,po,bot[us])
-        if int(po)>bot[us]:
-            k = InstagramScraper()
-            namee = us.split("@")[1].split(")")[0]
-            u = 'https://www.instagram.com/' + namee  +'/?hl=en'
-            results = k.profile_page_recent_posts(')
-            for i in range(int(po)-bot[us]):
-                url = results[i-1]['display_url']
-                cap = "Repost from : " + us + results[i-1]['edge_media_to_caption']['edges'][0]['node']['text']
-                urllib.request.urlretrieve(url,"test.jpg")
-              # login
-                photo_path = 'test.jpg'
-                InstagramAPI.uploadPhoto(photo_path, caption=cap)
-                os.remove("test.jpg")
-                print(i)
-                bot[us]+=1
-                print(bot[us])
-                break
-
+        for x in bot:
+            us,po = Insta_Info_Scraper().main(x)
+            print(us,po,bot[us])
+            if int(po)>bot[us]:
+                k = InstagramScraper()
+                namee = us.split("@")[1].split(")")[0]
+                u = 'https://www.instagram.com/' + namee  +'/?hl=en'
+                results = k.profile_page_recent_posts(u)
+                for i in range(int(po)-bot[us]):
+                    url = results[i-1]['display_url']
+                    cap = "Repost from : " + us + results[i-1]['edge_media_to_caption']['edges'][0]['node']['text']
+                    urllib.request.urlretrieve(url,"test.jpg")
+                  # login
+                    photo_path = 'test.jpg'
+                    InstagramAPI.uploadPhoto(photo_path, caption=cap)
+                    os.remove("test.jpg")
+                    print(i)
+                    bot[us]+=1
+                    print(bot[us])
+                    break
