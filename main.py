@@ -1,8 +1,10 @@
 from random import choice
 import json
-
+from InstagramAPI import InstagramAPI
 import requests
 from bs4 import BeautifulSoup
+import urllib.request
+import os
 
 _user_agents = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
@@ -73,7 +75,16 @@ class InstagramScraper:
                     results.append(node)
         return results
 from pprint import pprint
-
+InstagramAPI = InstagramAPI("vit_bot", "yaas123")
+InstagramAPI.login()
 k = InstagramScraper()
-results = k.profile_page_recent_posts('https://www.instagram.com/akshatvg23/?hl=en')
-pprint(results)
+results = k.profile_page_recent_posts('https://www.instagram.com/__anandsure/?hl=en')
+for i in range(0,12):
+    url = results[i]['display_url']
+    cap = results[i]['edge_media_to_caption']['edges'][0]['node']['text']
+    urllib.request.urlretrieve(url,"test.jpg")
+  # login
+    photo_path = 'test.jpg'
+    InstagramAPI.uploadPhoto(photo_path, caption=cap)
+    os.remove("test.jpg")
+    print(i)
