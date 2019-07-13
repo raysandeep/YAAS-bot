@@ -16,7 +16,6 @@ _user_agents = [
 ]
 import os
 import sys
-import psutil
 import logging
 def run_again(cmd):
     subprocess.call(["bash", "-c", "source ~/.profile; " + cmd]) 
@@ -168,4 +167,4 @@ while(True and f==0):
 if (f==1):
     #os.system("python dvb.py")
     time.sleep(55)
-    run_again("python3 dvb.py")
+    run_again("python3 yaas.py")
