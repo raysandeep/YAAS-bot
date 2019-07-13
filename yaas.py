@@ -124,7 +124,7 @@ c=0
 f=0
 while(True and f==0):
     c=0
-    while(c<30):
+    while(c<40):
         print(c)
         c+=1
         for x in bot:
@@ -159,12 +159,12 @@ while(True and f==0):
                 print(bot[us])
                 bot[us] = int(po)
     
-    if(c>=30):
+    if(c>=40):
         time.sleep(2)
         print("moving out")
         f=1
         break
 if (f==1):
     #os.system("python dvb.py")
-    time.sleep(55)
+    time.sleep(120)
     run_again("python3 yaas.py")
