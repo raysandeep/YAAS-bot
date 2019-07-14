@@ -130,7 +130,7 @@ while(True and f==0):
         for x in bot:
             us,po = Insta_Info_Scraper().main(x)
             print(us,po,bot[us])
-            time.sleep(2)
+            time.sleep(1)
             if int(po)>bot[us]:
                 k = InstagramScraper()
                 namee = us.split("@")[1].split(")")[0]
