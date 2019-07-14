@@ -119,7 +119,7 @@ InstagramAPI2 = InstagramAPI("yaas_bot", "yaas123")
 InstagramAPI2.login()    
 dnj=[]
 pos = []
-with open(r"/Users/akshatvg/Desktop/insta-bot/works/final.csv") as csv_file:  
+with open(r"/home/ubuntu/insta-bot/final.csv") as csv_file:  
     csv_reader = csv.reader(csv_file, delimiter=',') 
     df = pd.DataFrame([csv_reader], index=None) 
     df.head() 
