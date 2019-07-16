@@ -13,6 +13,12 @@ import pandas as pd
 import csv
 import time
 import subprocess
+
+
+INSTAGRAM_URL = "https://www.instagram.com/"
+STATIC_IMAGE_PATH = "test.jpg"
+TAGS_SEARCH = "#yaas #teamyaas #vitbot #vit #technology "
+
 _user_agents = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
 ]
@@ -114,55 +120,60 @@ class InstagramScraper:
         return results
 
     
+class CheckandHandler:
+    
+    def __init__(self,username="yaas_bot", password="yass123"):
+        self.username = username
+        self.password = password 
+        self.initiator()
+        self.reference_dict = posbcw.get_dict()
+        self.run_once_counter = 0
+        self.repetitor = 0
+        
+    def initiator(self):
+        InstagramAPI2 = InstagramAPI(self.username, self.password)
+        InstagramAPI2.login()
+    
+    def file_uploader(self, path_to_image, caption_of_image):
+        InstagramAPI2.uploadPhoto(path_to_image, caption=caption_of_image)
+        os.remove(path_to_image)
+        
+    def main_function(self):   
+        while !(self.repetitor):
+            self.run_once_counter = 0
+            while !(self.repetitor):
+                print(self.run_once_counter)
+                self.run_once_counter+=1
+                for x in range(1,43):
+                    for val in self.reference_dict[x]:
+                        #print(val[1])
+                        us,po = Insta_Info_Scraper().main(val[1])
+                        print(us,po,int(val[2]))
+                        time.sleep(2)
+                        if int(po)>int(val[2]):
+                            k = InstagramScraper()
+                            namee = us.split("@")[1].split(")")[0]
+                            u = INSTAGRAM_URL + namee  +'/?hl=en'
+                            results = k.profile_page_recent_posts(u)
+                            for i in range(int(po)-int(val[2])):
+                                print(i)
+                                url = results[0]['display_url']
+                                if results[0]['edge_media_to_caption']['edges']==[]:
+                                    cap = "Repost from : " + us + " "
+                                    cap += TAGS_SEARCH
+                                else:
+                                    cap = "Repost from : " + us + " "+ results[0]['edge_media_to_caption']['edges'][0]['node']['text']
+                                    cap += TAGS_SEARCH
 
-InstagramAPI2 = InstagramAPI("yaas_bot", "yaas123")
-InstagramAPI2.login()    
-dnj=[]
-pos = []
-with open(r"/home/ubuntu/insta-bot/final.csv") as csv_file:  
-    csv_reader = csv.reader(csv_file, delimiter=',') 
-    df = pd.DataFrame([csv_reader], index=None) 
-    df.head() 
-c=0
-f=0
-while(True and f==0):
-    c=0
-    while(True):
-        print(c)
-        c+=1
-        for x in range(1,43):
-            for val in df[x]:
-                #print(val[1])
-                us,po = Insta_Info_Scraper().main(val[1])
-                print(us,po,int(val[2]))
-                time.sleep(2)
-                if int(po)>int(val[2]):
-                    k = InstagramScraper()
-                    namee = us.split("@")[1].split(")")[0]
-                    u = 'https://www.instagram.com/' + namee  +'/?hl=en'
-                    results = k.profile_page_recent_posts(u)
-                    for i in range(int(po)-int(val[2])):
-                        print(i)
-                        url = results[0]['display_url']
-                        has = "#yaas #teamyaas #vitbot #vit #technology "
-                        if results[0]['edge_media_to_caption']['edges']==[]:
-                            cap = "Repost from : " + us + " "
-                            cap += has
-                        else:
-                            cap = "Repost from : " + us + " "+ results[0]['edge_media_to_caption']['edges'][0]['node']['text']
-                            cap += has
-
-                        urllib.request.urlretrieve(url,"test.jpg")
-                    # login
-                        photo_path = 'test.jpg'
-                        InstagramAPI2.uploadPhoto(photo_path, caption=cap)
-                        os.remove("test.jpg")
-                        print(i)
-                        df[val[2]] = int(df[val[2]])
-                        df[val[2]] += 1
-                        print(int(val[2]))
-                        break
-                elif int(po)< int(val[2]) :
-                    print(int(val[2]))
-                    df[val[2]] = po
-                    po = int(po)
+                                urllib.request.urlretrieve(url, STATIC_IMAGE_PATH)
+                            # login
+                                self.file_uploader(STATIC_IMAGE_PATH, cap)
+                                print(i)
+                                self.reference_dict[val[2]] = int(self.reference_dict[val[2]])
+                                self.reference_dict[val[2]] += 1
+                                print(int(val[2]))
+                                break
+                        elif int(po)< int(val[2]) :
+                            print(int(val[2]))
+                            self.reference_dict[val[2]] = po
+                            po = int(po)
