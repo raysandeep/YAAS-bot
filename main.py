@@ -75,11 +75,11 @@ class InstagramScraper:
                     results.append(node)
         return results
 from pprint import pprint
-InstagramAPI = InstagramAPI("vit_bot", "yaas123")
+InstagramAPI = InstagramAPI("bot_trial123", "yaas123")
 InstagramAPI.login()
 k = InstagramScraper()
-results = k.profile_page_recent_posts('https://www.instagram.com/__anandsure/?hl=en')
-for i in range(0,12):
+results = k.profile_page_recent_posts('https://www.instagram.com/codechefvit/?hl=en')
+for i in range(0,1):
     url = results[i]['display_url']
     cap = results[i]['edge_media_to_caption']['edges'][0]['node']['text']
     urllib.request.urlretrieve(url,"test.jpg")
