@@ -146,7 +146,7 @@ class CheckandHandler:
                 self.run_once_counter+=1
                 for x in range(1,43):
                     for val in self.reference_dict[x]:
-                        #print(val[1])
+                        print(val[1])
                         us,po = Insta_Info_Scraper().main(val[1])
                         print(us,po,int(val[2]))
                         time.sleep(2)

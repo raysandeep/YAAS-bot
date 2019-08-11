@@ -5,10 +5,43 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.request
 import os
+import ssl
 
 _user_agents = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
 ]
+
+class Insta_Info_Scraper:
+
+    def getinfo(self, url):
+        html = urllib.request.urlopen(url, context=self.ctx).read()
+        soup = BeautifulSoup(html, 'html.parser')
+        data = soup.find_all('meta', attrs={'property': 'og:description'
+                             })
+        
+        text = data[0].get('content').split()
+        self.user = ""
+        for i in text:
+            if i == "from":
+                for k in range(1,len(text) - text.index(i)):
+                    self.user =self.user + " "+ text[text.index(i)+k]
+        followers = text[0]
+        following = text[2]
+        self.posts = text[4]
+        '''print ('User:', self.user)
+        print ('Followers:', followers)
+        print ('Following:', following)
+        print ('Posts:', self.posts)
+        print ('---------------------------')'''
+    def main(self,username):
+        self.ctx = ssl.create_default_context()
+        self.ctx.check_hostname = False
+        self.ctx.verify_mode = ssl.CERT_NONE
+        #print(username)
+        url1 = "https://www.instagram.com/"+ username + "/"
+        #print(url1)
+        self.getinfo(url1)
+        return self.user,self.posts
 
 
 class InstagramScraper:
@@ -75,16 +108,19 @@ class InstagramScraper:
                     results.append(node)
         return results
 from pprint import pprint
-InstagramAPI = InstagramAPI("bot_trial123", "yaas123")
+InstagramAPI = InstagramAPI("yaas_bot", "manboobs")
 InstagramAPI.login()
 k = InstagramScraper()
-results = k.profile_page_recent_posts('https://www.instagram.com/codechefvit/?hl=en')
+chaptername = input("Enter Chapter insta handle by removing @ before :   ")
+urlofchap = 'https://www.instagram.com/'+chaptername+'/?hl=en'
+results = k.profile_page_recent_posts(urlofchap)
 for i in range(0,1):
     url = results[i]['display_url']
-    cap = results[i]['edge_media_to_caption']['edges'][0]['node']['text']
+    us,po = Insta_Info_Scraper().main(chaptername)
+    cap = "Repost from: " + us +" "+results[i]['edge_media_to_caption']['edges'][0]['node']['text']+"#yaas #teamyaas #vitbot #vit #technology"
     urllib.request.urlretrieve(url,"test.jpg")
   # login
     photo_path = 'test.jpg'
     InstagramAPI.uploadPhoto(photo_path, caption=cap)
     os.remove("test.jpg")
-    print(i)
+    print(cap)
